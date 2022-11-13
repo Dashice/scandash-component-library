@@ -5,46 +5,36 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Option } from "./components/scandash-dropdown/types";
 export namespace Components {
-    interface ScandashOption {
-    }
-    interface ScandashSelect {
+    interface ScandashDropdown {
+        "options": string | Option[];
     }
 }
 declare global {
-    interface HTMLScandashOptionElement extends Components.ScandashOption, HTMLStencilElement {
+    interface HTMLScandashDropdownElement extends Components.ScandashDropdown, HTMLStencilElement {
     }
-    var HTMLScandashOptionElement: {
-        prototype: HTMLScandashOptionElement;
-        new (): HTMLScandashOptionElement;
-    };
-    interface HTMLScandashSelectElement extends Components.ScandashSelect, HTMLStencilElement {
-    }
-    var HTMLScandashSelectElement: {
-        prototype: HTMLScandashSelectElement;
-        new (): HTMLScandashSelectElement;
+    var HTMLScandashDropdownElement: {
+        prototype: HTMLScandashDropdownElement;
+        new (): HTMLScandashDropdownElement;
     };
     interface HTMLElementTagNameMap {
-        "scandash-option": HTMLScandashOptionElement;
-        "scandash-select": HTMLScandashSelectElement;
+        "scandash-dropdown": HTMLScandashDropdownElement;
     }
 }
 declare namespace LocalJSX {
-    interface ScandashOption {
-    }
-    interface ScandashSelect {
+    interface ScandashDropdown {
+        "options": string | Option[];
     }
     interface IntrinsicElements {
-        "scandash-option": ScandashOption;
-        "scandash-select": ScandashSelect;
+        "scandash-dropdown": ScandashDropdown;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "scandash-option": LocalJSX.ScandashOption & JSXBase.HTMLAttributes<HTMLScandashOptionElement>;
-            "scandash-select": LocalJSX.ScandashSelect & JSXBase.HTMLAttributes<HTMLScandashSelectElement>;
+            "scandash-dropdown": LocalJSX.ScandashDropdown & JSXBase.HTMLAttributes<HTMLScandashDropdownElement>;
         }
     }
 }
