@@ -14,15 +14,21 @@
   <scandash-dropdown
     options='[
       { "value": "apple", "label": "Apple" },
-      { "value": "pineapple", "label": "Pineapple" },
-      { "value": "orange" },
+      { "value": "pineapple", "label": "Pineapple", "disabled": false },
+      { "value": "orange", "selected": true },
       { "label": "Pear" },
-      { "disabled": true }
+      { "disabled": true },
+      { "label": "Banana", "value": "banana", "selected": true },
+      { "label": "Strawberry", "value": "strawberry", "disabled": true },
+      { "label": "Kiwi", "value": "kiwi", "disabled": true }
     ]'
   >
   </scandash-dropdown>
 </body>
 <script>
-
+  const dropdown = document.querySelector('scandash-dropdown');
+/*   setTimeout(() => {
+    dropdown.setAttribute('options', '[{ "value": "Apple", "label": "Apple" }, { "value": "orange", "label": "Orange" }]')
+  }, 2000) */
 </script>
 </html>
