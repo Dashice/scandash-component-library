@@ -5,7 +5,7 @@
 
 import { Component, Host, h, Prop, Watch, State } from '@stencil/core';
 
-import { generateID } from '../../utils/generateID';
+import { generateID } from '../../utils';
 
 import { Option } from './types';
 
