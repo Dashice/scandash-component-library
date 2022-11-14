@@ -8,7 +8,9 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Option } from "./components/scandash-dropdown/types";
 export namespace Components {
     interface ScandashDropdown {
+        "label"?: string;
         "options": string | Option[];
+        "placeholder"?: string;
     }
 }
 declare global {
@@ -24,7 +26,9 @@ declare global {
 }
 declare namespace LocalJSX {
     interface ScandashDropdown {
+        "label"?: string;
         "options": string | Option[];
+        "placeholder"?: string;
     }
     interface IntrinsicElements {
         "scandash-dropdown": ScandashDropdown;
