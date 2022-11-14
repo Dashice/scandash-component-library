@@ -8,8 +8,17 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Option } from "./components/scandash-dropdown/types";
 export namespace Components {
     interface ScandashDropdown {
+        /**
+          * The label to be displayed above the dropdown button.
+         */
         "label"?: string;
+        /**
+          * A list of options to be displayed in the dropdown. May be passed as a JSON `string` or an array of `Option` objects.
+         */
         "options": string | Option[];
+        /**
+          * The placeholder text to be displayed when no option is selected.
+         */
         "placeholder"?: string;
     }
 }
@@ -26,8 +35,17 @@ declare global {
 }
 declare namespace LocalJSX {
     interface ScandashDropdown {
+        /**
+          * The label to be displayed above the dropdown button.
+         */
         "label"?: string;
+        /**
+          * A list of options to be displayed in the dropdown. May be passed as a JSON `string` or an array of `Option` objects.
+         */
         "options": string | Option[];
+        /**
+          * The placeholder text to be displayed when no option is selected.
+         */
         "placeholder"?: string;
     }
     interface IntrinsicElements {
