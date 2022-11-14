@@ -67,7 +67,10 @@ export class ScandashDropdown {
 
       const filteredOptions = options.filter(option => {
         if (typeof option !== 'object') return false;
-        if (!option.hasOwnProperty('label') || !option.hasOwnProperty('value')) {
+        if (
+          !option.hasOwnProperty('label') ||
+          !option.hasOwnProperty('value')
+        ) {
           return false;
         }
         return true;
@@ -93,8 +96,11 @@ export class ScandashDropdown {
   }
 
   private getInitialSelectedOption() {
-    const selectedOption = this.sanitizedOptions?.find(option => option.selected);
-    const firstOption = this.sanitizedOptions.length === 1 ? this.sanitizedOptions?.[0] : null;
+    const selectedOption = this.sanitizedOptions?.find(
+      option => option.selected,
+    );
+    const firstOption =
+      this.sanitizedOptions.length === 1 ? this.sanitizedOptions?.[0] : null;
 
     this.selectedOption = selectedOption || firstOption;
   }
@@ -130,24 +136,42 @@ export class ScandashDropdown {
     return (
       <Host>
         <div>
-          <label id={`${id}-label`} onClick={() => (this.isExpanded = !this.isExpanded)}>
-            {this.label && (<span>{this.label}:</span>)}
-            <div aria-controls={`${id}-listbox`} aria-expanded={this.isExpanded.toString()} aria-haspopup="listbox" aria-labelledby={`${id}-label`} role="combobox" tabindex="0">
-              {this.selectedOption?.label ? <strong>{this.selectedOption?.label}</strong> : <span>{this.placeholder || 'Select an option...'}</span>}
+          <label
+            id={`${id}-label`}
+            onClick={() => (this.isExpanded = !this.isExpanded)}>
+            {this.label && <span>{this.label}:</span>}
+            <div
+              aria-controls={`${id}-listbox`}
+              aria-expanded={this.isExpanded.toString()}
+              aria-haspopup="listbox"
+              aria-labelledby={`${id}-label`}
+              role="combobox"
+              tabindex="0">
+              {this.selectedOption?.label ? (
+                <strong>{this.selectedOption?.label}</strong>
+              ) : (
+                <span>{this.placeholder || 'Select an option...'}</span>
+              )}
             </div>
           </label>
 
-          <div role="listbox" class={this.isExpanded ? '' : 'visually-hidden no-events'} id={`${id}-listbox`} aria-labelledby={`${id}-label`} tabindex={-1}>
+          <div
+            role="listbox"
+            class={this.isExpanded ? '' : 'visually-hidden no-events'}
+            id={`${id}-listbox`}
+            aria-labelledby={`${id}-label`}
+            tabindex={-1}>
             {this.sanitizedOptions?.map((option, index) => (
               <div
                 key={index}
                 role="option"
-                aria-selected={(this.selectedOption?.value === option.value).toString()}
+                aria-selected={(
+                  this.selectedOption?.value === option.value
+                ).toString()}
                 aria-setsize={this.sanitizedOptions.length}
                 aria-posinset={index + 1}
                 onClick={() => this.handleOptionClicked(option)}
-                tabIndex={this.isExpanded ? 0 : -1}
-              >
+                tabIndex={this.isExpanded ? 0 : -1}>
                 {option.label}
               </div>
             ))}
