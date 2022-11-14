@@ -25,6 +25,9 @@ const SELECT = {
   shadow: true,
 })
 export class ScandashDropdown {
+  // Variables
+  id = generateID('dropdown');
+
   // Properties
 
   /**
@@ -275,20 +278,18 @@ export class ScandashDropdown {
   }
 
   render() {
-    const id = generateID('dropdown');
-
     return (
       <div ref={element => (this.ref = element)}>
         <label
-          id={`${id}-label`}
+          id={`${this.id}-label`}
           onClick={() => (this.isExpanded = !this.isExpanded)}>
           {this.label && <span>{this.label}:</span>}
           <button
             role="combobox"
-            aria-controls={`${id}-listbox`}
+            aria-controls={`${this.id}-listbox`}
             aria-expanded={this.isExpanded.toString()}
             aria-haspopup="listbox"
-            aria-labelledby={`${id}-label`}
+            aria-labelledby={`${this.id}-label`}
             tabindex="0">
             {this.selectedOption?.label ? (
               <strong>{this.selectedOption?.label}</strong>
@@ -299,10 +300,10 @@ export class ScandashDropdown {
         </label>
 
         <div
-          id={`${id}-listbox`}
+          id={`${this.id}-listbox`}
           class={this.isExpanded ? '' : 'visually-hidden no-events'}
           role="listbox"
-          aria-labelledby={`${id}-label`}
+          aria-labelledby={`${this.id}-label`}
           tabindex={-1}>
           {this.sanitizedOptions?.map((option, index) => (
             <button
