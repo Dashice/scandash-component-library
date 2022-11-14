@@ -37,17 +37,17 @@
 }
 
 /* Instigator Wrapper */
-:host > div > label > div {
+:host > div > label > [role="combobox"] {
   display: block;
 }
 
 /* Instigator Text */
-:host > div > label > div > strong {
+:host > div > label > [role="combobox"] > strong {
   display: block;
 }
 
 /* Instigator Placeholder Text */
-:host > div > label > div > span {
+:host > div > label > [role="combobox"] > span {
   display: block;
 }
 
@@ -60,6 +60,12 @@
 /* Option */
 :host > div > [role="listbox"] > [role="option"] {
   display: block;
+}
+
+/* Disabled option */
+:host > div > [role="listbox"] > [role="option"][aria-disabled="true"] {
+  display: block;
+  opacity: 0.5;
 }
 
 /* Selected Option */
