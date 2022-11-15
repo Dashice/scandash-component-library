@@ -12,6 +12,7 @@ const SELECT = {
   /* LIST: '[role="listbox"]', */ // Unused
   /* OPTIONS: '[role="option"]', */ // Unused
   ENABLED_OPTIONS: '[role="option"]:not([aria-disabled="true"])',
+  SELECTED_OPTION: '[role="option"][aria-selected="true"]',
 };
 
 @Component({
@@ -73,7 +74,12 @@ export class ScandashDropdown {
 
     if (this.isExpanded) {
       addEventListener('click', this.handleClickOutside.bind(context));
-      (this.ref.querySelector(SELECT.ENABLED_OPTIONS) as HTMLElement)?.focus();
+
+      // When expanded, focuses either the selected option or the first option.
+      const selectedOption = this.ref.querySelector(SELECT.SELECTED_OPTION);
+      const firstEnabledOption = this.ref.querySelector(SELECT.ENABLED_OPTIONS);
+
+      ((selectedOption || firstEnabledOption) as HTMLElement)?.focus();
     } else {
       removeEventListener('click', this.handleClickOutside.bind(context));
       (this.ref.querySelector(SELECT.COMBOBOX) as HTMLElement)?.focus();
@@ -102,15 +108,14 @@ export class ScandashDropdown {
         throw new Error('Options attribute must contain at least one option.');
       }
 
-      // Filter out any options that do not contain a `label` or `value` key.
+      // Filter out some common bad data
       const filteredOptions: Option[] = options.filter(option => {
+        // Filter out array values that are not of type object
         if (typeof option !== 'object') return false;
-        if (
-          !option.hasOwnProperty('label') ||
-          !option.hasOwnProperty('value')
-        ) {
-          return false;
-        }
+        // Filter out objects that do not have a `value` or `label` key
+        if (!option['label'] || !option['value']) return false;
+        // Filter out objects whose `value` is not of type `"string"`
+        if (typeof option['value'] !== 'string') return false;
         return true;
       });
 
@@ -181,9 +186,6 @@ export class ScandashDropdown {
     if (!target.closest('scandash-dropdown')) this.isExpanded = false;
   }
 
-  /**
-   * @todo - Should handle focusleave event, to close the dropdown.
-   */
   private handleKeyUp(event: KeyboardEvent) {
     if (!this.isExpanded || !this.ref) return;
 
@@ -199,64 +201,49 @@ export class ScandashDropdown {
     // Filter out disabled options from sanitized `Option[]`
     const options = this.sanitizedOptions?.filter(option => !option.disabled);
 
-    /**
-     * Selects the next available option, otherwise selects the first option.
-     */
-    const next = () => {
-      const nextIndex = currentOptionsHTMLIndex + 1;
-
-      if (optionsHTML[nextIndex]) {
-        (optionsHTML[nextIndex] as HTMLElement)?.focus();
-        this.selectedOption = options?.[nextIndex];
-        return;
-      }
-
-      first();
-    };
-
-    /**
-     * Selects the previous available option, otherwise selects the last option.
-     */
-    const prev = () => {
-      const prevIndex = currentOptionsHTMLIndex - 1;
-
-      if (optionsHTML[prevIndex]) {
-        (optionsHTML[prevIndex] as HTMLElement)?.focus();
-        this.selectedOption = options?.[prevIndex];
-        return;
-      }
-
-      last();
-    };
-
-    /**
-     * Selects the first available option.
-     */
-    const first = () => {
-      (optionsHTML[0] as HTMLElement)?.focus();
-      this.selectedOption = options?.[0] || null;
-    };
-
-    /**
-     * Selects the last available option.
-     */
-    const last = () => {
-      (optionsHTML[optionsHTML.length - 1] as HTMLElement)?.focus();
-      this.selectedOption = options?.[options.length - 1] || null;
-    };
-
     switch (event.key) {
+      // Select the focused option and close the dropdown.
+      case 'Tab':
+        this.isExpanded = false;
+        this.selectedOption = options?.[currentOptionsHTMLIndex];
+      // Move visual focus to previous option.
       case 'ArrowDown':
-        return next();
+        const nextIndex = currentOptionsHTMLIndex + 1;
+        (optionsHTML[nextIndex] as HTMLElement)?.focus();
+        return;
+      // Move visual focus to next option.
       case 'ArrowUp':
-        return prev();
+        const prevIndex = currentOptionsHTMLIndex - 1;
+        (optionsHTML[prevIndex] as HTMLElement)?.focus();
+        return;
+      // Close the dropdown.
       case 'Escape':
         this.isExpanded = false;
         return;
+      // Move visual focus to the 10th previous option (or first).
+      case 'PageUp':
+        const prevTenIndicies = currentOptionsHTMLIndex - 10;
+        const prevElement = optionsHTML[prevTenIndicies] as HTMLElement;
+        const firstElement = optionsHTML[0] as HTMLElement;
+
+        (prevElement || firstElement)?.focus();
+        return;
+      // Move visual focus to the 10th next option (or last).
+      case 'PageDown':
+        const nextTenIndicies = currentOptionsHTMLIndex + 10;
+        const nextElement = optionsHTML[nextTenIndicies] as HTMLElement;
+        const lastElement = optionsHTML[optionsHTML.length - 1] as HTMLElement;
+
+        (nextElement || lastElement)?.focus();
+        return;
+      // Move visual focus to the first option.
       case 'Home':
-        return first();
+        (optionsHTML[0] as HTMLElement)?.focus();
+        return;
+      // Move visual focus to the last option.
       case 'End':
-        return last();
+        (optionsHTML[optionsHTML.length - 1] as HTMLElement)?.focus();
+        return;
     }
   }
 
@@ -323,9 +310,16 @@ export class ScandashDropdown {
                 !option?.disabled && this.handleOptionClicked(option)
               }
               onKeyDown={e =>
-                ['ArrowDown', 'ArrowUp', 'Escape', 'Home', 'End'].includes(
-                  e.key,
-                ) && e.preventDefault()
+                [
+                  'ArrowDown',
+                  'ArrowUp',
+                  'Escape',
+                  'Home',
+                  'End',
+                  'PageDown',
+                  'PageUp',
+                  'Tab',
+                ].includes(e.key) && e.preventDefault()
               }
               onKeyUp={e => this.handleKeyUp(e)}
               tabIndex={this.isExpanded && !option.disabled ? 0 : -1}>
