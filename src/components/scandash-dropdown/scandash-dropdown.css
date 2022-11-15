@@ -16,59 +16,67 @@
   pointer-events: none;
 }
 
+.rotate-180 {
+  /*
+    We use scaleY instead of rotate, as it also mirrors the transformation.
+    Good for non-1:1 bounding rects.
+  */
+  transform: scaleY(-1)
+}
+
 /* Host */
 :host {
   display: block;
 }
 
 /* Container */
-:host > div {
+:host {
   display: block;
 }
 
 /* Label Wrapper, contains the label of component as well as the instigator. */
-:host > div > label {
+:host > label {
   display: block;
 }
 
 /* Label */
-:host > div > label > span {
+:host > label > span {
   display: block;
 }
 
 /* Instigator Wrapper */
-:host > div > label > [role="combobox"] {
+:host > label > [role="combobox"] {
   display: block;
 }
 
 /* Instigator Text */
-:host > div > label > [role="combobox"] > strong {
+:host > label > [role="combobox"] > strong {
   display: block;
 }
 
 /* Instigator Placeholder Text */
-:host > div > label > [role="combobox"] > span {
+:host > label > [role="combobox"] > span {
   display: block;
 }
 
 /* Options list */
-:host > div > [role="listbox"] {
+:host > [role="listbox"] {
   display: block;
   border: 1px solid red;
 }
 
 /* Option */
-:host > div > [role="listbox"] > [role="option"] {
+:host > [role="listbox"] > [role="option"] {
   display: block;
 }
 
 /* Disabled option */
-:host > div > [role="listbox"] > [role="option"][aria-disabled="true"] {
+:host > [role="listbox"] > [role="option"][aria-disabled="true"] {
   display: block;
   opacity: 0.5;
 }
 
 /* Selected Option */
-:host > div > [role="listbox"] > [role="option"][aria-selected="true"] {
+:host > [role="listbox"] > [role="option"][aria-selected="true"] {
   display: block;
 }
