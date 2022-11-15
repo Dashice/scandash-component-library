@@ -7,7 +7,6 @@ import {
   Event,
   EventEmitter,
   Element,
-  Host,
   Method,
 } from '@stencil/core';
 
@@ -49,10 +48,6 @@ export class ScandashDropdown {
    * The placeholder text to be displayed when no option is selected.
    */
   @Prop() placeholder?: string;
-  /**
-   * The label to be displayed above the dropdown button.
-   */
-  @Prop() label?: string;
 
   // State
 
@@ -88,13 +83,19 @@ export class ScandashDropdown {
       addEventListener('click', this.handleClickOutside.bind(context));
 
       // When expanded, focuses either the selected option or the first option.
-      const selectedOption = this.ref.querySelector(SELECT.SELECTED_OPTION);
-      const firstEnabledOption = this.ref.querySelector(SELECT.ENABLED_OPTIONS);
+      const selectedOption = this.ref.shadowRoot.querySelector(
+        SELECT.SELECTED_OPTION,
+      );
+      const firstEnabledOption = this.ref.shadowRoot.querySelector(
+        SELECT.ENABLED_OPTIONS,
+      );
 
       ((selectedOption || firstEnabledOption) as HTMLElement)?.focus();
     } else {
       removeEventListener('click', this.handleClickOutside.bind(context));
-      (this.ref.querySelector(SELECT.COMBOBOX) as HTMLElement)?.focus();
+      (
+        this.ref.shadowRoot.querySelector(SELECT.COMBOBOX) as HTMLElement
+      )?.focus();
     }
   }
 
@@ -155,8 +156,9 @@ export class ScandashDropdown {
 
       // Remove any duplicate `Option` objects, if two `Option` objects
       // have the same `value` key / value pair.
-      filteredOptions.forEach((option, index) => {
-        uniqueFilteredOptions.set(option.value + index, option);
+      filteredOptions.forEach(option => {
+        if (uniqueFilteredOptions.has(option.value)) return;
+        uniqueFilteredOptions.set(option.value, option);
       });
 
       this.sanitizedOptions = [...uniqueFilteredOptions.values()];
@@ -222,7 +224,9 @@ export class ScandashDropdown {
     if (!this.isExpanded || !this.ref) return;
 
     // Select all non-disabled options
-    const optionsHTML = this.ref.querySelectorAll(SELECT.ENABLED_OPTIONS);
+    const optionsHTML = this.ref.shadowRoot.querySelectorAll(
+      SELECT.ENABLED_OPTIONS,
+    );
 
     // Get the currently focused option index
     const target = event.target as HTMLElement;
@@ -301,32 +305,25 @@ export class ScandashDropdown {
 
   render() {
     return (
-      <Host>
-        <label
-          id={`${this.id}-label`}
+      <div>
+        <button
+          role="combobox"
+          aria-controls={`${this.id}-listbox`}
+          aria-expanded={this.isExpanded.toString()}
+          aria-haspopup="listbox"
+          aria-labelledby={`${this.id}-label`}
           onClick={() => (this.isExpanded = !this.isExpanded)}>
-          {this.label && <span>{this.label}</span>}
-          <button
-            role="combobox"
-            aria-controls={`${this.id}-listbox`}
-            aria-expanded={this.isExpanded.toString()}
-            aria-haspopup="listbox"
-            aria-labelledby={`${this.id}-label`}
-            tabindex="0">
-            {this.selectedOption?.label ? (
-              <strong>{this.selectedOption?.label}</strong>
-            ) : (
-              <span>{this.placeholder || 'Select an option...'}</span>
-            )}
-          </button>
-        </label>
-
+          {this.selectedOption?.label ? (
+            <strong>{this.selectedOption?.label}</strong>
+          ) : (
+            <span>{this.placeholder || 'Select an option...'}</span>
+          )}
+        </button>
         <div
           id={`${this.id}-listbox`}
           class={this.isExpanded ? '' : 'visually-hidden no-events'}
           role="listbox"
-          aria-labelledby={`${this.id}-label`}
-          tabindex={-1}>
+          aria-labelledby={`${this.id}-label`}>
           {this.sanitizedOptions?.map((option, index) => (
             <button
               key={index}
@@ -355,11 +352,15 @@ export class ScandashDropdown {
               }
               onKeyUp={e => this.handleKeyUp(e)}
               tabIndex={this.isExpanded && !option.disabled ? 0 : -1}>
-              {option.label}
+              {this.selectedOption?.value === option.value ? (
+                <strong>{option.label}</strong>
+              ) : (
+                <span>{option.label}</span>
+              )}
             </button>
           ))}
         </div>
-      </Host>
+      </div>
     );
   }
 }
