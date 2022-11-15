@@ -1,8 +1,3 @@
-/**
- * @todo - Convert sanitizedOptions to a Map, to avoid potentially
- * duplicate value keys.
- */
-
 import { Component, h, Prop, Watch, State } from '@stencil/core';
 
 import { generateID } from '../../utils';
@@ -108,7 +103,7 @@ export class ScandashDropdown {
       }
 
       // Filter out any options that do not contain a `label` or `value` key.
-      const filteredOptions = options.filter(option => {
+      const filteredOptions: Option[] = options.filter(option => {
         if (typeof option !== 'object') return false;
         if (
           !option.hasOwnProperty('label') ||
@@ -119,7 +114,15 @@ export class ScandashDropdown {
         return true;
       });
 
-      this.sanitizedOptions = filteredOptions;
+      const uniqueFilteredOptions = new Map();
+
+      // Remove any duplicate `Option` objects, if two `Option` objects
+      // have the same `value` key / value pair.
+      for (let option of filteredOptions) {
+        uniqueFilteredOptions.set(option.value, option);
+      }
+
+      this.sanitizedOptions = Array.from(uniqueFilteredOptions.values());
     };
 
     // If options is a string, we attempt to parse it as JSON.
