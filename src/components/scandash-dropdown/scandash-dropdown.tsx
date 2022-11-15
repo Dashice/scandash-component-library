@@ -292,7 +292,7 @@ export class ScandashDropdown {
         <label
           id={`${this.id}-label`}
           onClick={() => (this.isExpanded = !this.isExpanded)}>
-          {this.label && <span>{this.label}:</span>}
+          {this.label && <span>{this.label}</span>}
           <button
             role="combobox"
             aria-controls={`${this.id}-listbox`}
