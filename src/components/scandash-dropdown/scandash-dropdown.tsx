@@ -6,6 +6,8 @@ import {
   State,
   Event,
   EventEmitter,
+  Element,
+  Host,
 } from '@stencil/core';
 
 import { generateID } from '../../utils';
@@ -32,6 +34,9 @@ export class ScandashDropdown {
   // Variables
   id = generateID('dropdown');
 
+  // Element
+  @Element() ref: HTMLElement;
+
   // Properties
 
   /**
@@ -54,8 +59,6 @@ export class ScandashDropdown {
   @State() selectedOption: null | Option = null;
 
   @State() isExpanded: boolean = false;
-
-  @State() ref: HTMLDivElement | null = null;
 
   // Watchers
 
@@ -106,8 +109,6 @@ export class ScandashDropdown {
   // Events
 
   @Event() onOptionChange: EventEmitter<Option>;
-
-  // Listeners
 
   // Methods
 
@@ -288,7 +289,7 @@ export class ScandashDropdown {
 
   render() {
     return (
-      <div ref={element => (this.ref = element)}>
+      <Host>
         <label
           id={`${this.id}-label`}
           onClick={() => (this.isExpanded = !this.isExpanded)}>
@@ -346,7 +347,7 @@ export class ScandashDropdown {
             </button>
           ))}
         </div>
-      </div>
+      </Host>
     );
   }
 }
