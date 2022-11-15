@@ -22,6 +22,10 @@ export namespace Components {
         "placeholder"?: string;
     }
 }
+export interface ScandashDropdownCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLScandashDropdownElement;
+}
 declare global {
     interface HTMLScandashDropdownElement extends Components.ScandashDropdown, HTMLStencilElement {
     }
@@ -39,6 +43,7 @@ declare namespace LocalJSX {
           * The label to be displayed above the dropdown button.
          */
         "label"?: string;
+        "onOnOptionChange"?: (event: ScandashDropdownCustomEvent<Option>) => void;
         /**
           * A list of options to be displayed in the dropdown. May be passed as a JSON `string` or an array of `Option` objects.
          */

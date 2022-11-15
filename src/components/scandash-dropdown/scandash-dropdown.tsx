@@ -1,4 +1,12 @@
-import { Component, h, Prop, Watch, State } from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Watch,
+  State,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 
 import { generateID } from '../../utils';
 
@@ -86,7 +94,18 @@ export class ScandashDropdown {
     }
   }
 
+  /**
+   * When the selected options changes, we emit an event; returning
+   * the `Option` object.
+   */
+  @Watch('selectedOption')
+  handleSelectedOptionChanged() {
+    this.onOptionChange.emit(this.selectedOption);
+  }
+
   // Events
+
+  @Event() onOptionChange: EventEmitter<Option>;
 
   // Listeners
 
@@ -123,11 +142,11 @@ export class ScandashDropdown {
 
       // Remove any duplicate `Option` objects, if two `Option` objects
       // have the same `value` key / value pair.
-      for (let option of filteredOptions) {
-        uniqueFilteredOptions.set(option.value, option);
-      }
+      filteredOptions.forEach((option, index) => {
+        uniqueFilteredOptions.set(option.value + index, option);
+      });
 
-      this.sanitizedOptions = Array.from(uniqueFilteredOptions.values());
+      this.sanitizedOptions = [...uniqueFilteredOptions.values()];
     };
 
     // If options is a string, we attempt to parse it as JSON.
