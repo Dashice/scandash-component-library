@@ -8,6 +8,7 @@ import {
   EventEmitter,
   Element,
   Host,
+  Method,
 } from '@stencil/core';
 
 import { generateID } from '../../utils';
@@ -111,6 +112,17 @@ export class ScandashDropdown {
   @Event() onOptionChange: EventEmitter<Option>;
 
   // Methods
+
+  /**
+   * Publically exposed method, which when called, resets the `selectedOption`
+   * to its default value, given the `option` prop or attribute configuration.
+   */
+  @Method()
+  async reset() {
+    this.getInitialSelectedOption();
+  }
+
+  // Methods (Private)
 
   /**
    * Sanitizes the `options` prop and converts it to an `Option[]`

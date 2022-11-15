@@ -20,6 +20,10 @@ export namespace Components {
           * The placeholder text to be displayed when no option is selected.
          */
         "placeholder"?: string;
+        /**
+          * Publically exposed method, which when called, resets the `selectedOption` to its default value, given the `option` prop or attribute configuration.
+         */
+        "reset": () => Promise<void>;
     }
 }
 export interface ScandashDropdownCustomEvent<T> extends CustomEvent<T> {
