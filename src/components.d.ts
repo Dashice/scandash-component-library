@@ -9,6 +9,16 @@ import { Option } from "./components/scandash-dropdown/types";
 export namespace Components {
     interface ScandashDropdown {
         /**
+          * In pixels, the size of the font used in the dropdown.
+          * @default 16
+         */
+        "fontSize"?: number;
+        /**
+          * In pixels, the height of each item. Default `40` is 2.5rem.
+          * @default 48
+         */
+        "itemSize"?: number;
+        /**
           * A list of options to be displayed in the dropdown. May be passed as a JSON `string` or an array of `Option` objects.
          */
         "options": string | Option[];
@@ -39,6 +49,16 @@ declare global {
 }
 declare namespace LocalJSX {
     interface ScandashDropdown {
+        /**
+          * In pixels, the size of the font used in the dropdown.
+          * @default 16
+         */
+        "fontSize"?: number;
+        /**
+          * In pixels, the height of each item. Default `40` is 2.5rem.
+          * @default 48
+         */
+        "itemSize"?: number;
         "onOnOptionChange"?: (event: ScandashDropdownCustomEvent<Option>) => void;
         /**
           * A list of options to be displayed in the dropdown. May be passed as a JSON `string` or an array of `Option` objects.

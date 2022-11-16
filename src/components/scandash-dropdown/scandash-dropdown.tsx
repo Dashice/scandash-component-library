@@ -8,6 +8,7 @@ import {
   EventEmitter,
   Element,
   Method,
+  getAssetPath,
 } from '@stencil/core';
 
 import { generateID } from '../../utils';
@@ -19,7 +20,7 @@ import { Option } from './types';
  */
 const SELECT = {
   COMBOBOX: '[role="combobox"]',
-  /* LIST: '[role="listbox"]', */ // Unused
+  LIST: '[role="listbox"]',
   /* OPTIONS: '[role="option"]', */ // Unused
   ENABLED_OPTIONS: '[role="option"]:not([aria-disabled="true"])',
   SELECTED_OPTION: '[role="option"][aria-selected="true"]',
@@ -29,6 +30,7 @@ const SELECT = {
   tag: 'scandash-dropdown',
   styleUrl: 'scandash-dropdown.css',
   shadow: true,
+  assetsDirs: ['assets'],
 })
 export class ScandashDropdown {
   // Variables
@@ -48,6 +50,16 @@ export class ScandashDropdown {
    * The placeholder text to be displayed when no option is selected.
    */
   @Prop() placeholder?: string;
+  /**
+   * In pixels, the height of each item. Default `40` is 2.5rem.
+   * @default 48
+   */
+  @Prop() itemSize?: number = 48;
+  /**
+   * In pixels, the size of the font used in the dropdown.
+   * @default 16
+   */
+  @Prop() fontSize?: number = 16;
 
   // State
 
@@ -82,15 +94,8 @@ export class ScandashDropdown {
     if (this.isExpanded) {
       addEventListener('click', this.handleClickOutside.bind(context));
 
-      // When expanded, focuses either the selected option or the first option.
-      const selectedOption = this.ref.shadowRoot.querySelector(
-        SELECT.SELECTED_OPTION,
-      );
-      const firstEnabledOption = this.ref.shadowRoot.querySelector(
-        SELECT.ENABLED_OPTIONS,
-      );
-
-      ((selectedOption || firstEnabledOption) as HTMLElement)?.focus();
+      this.focusMostAppropriateOption();
+      this.determineListHeight();
     } else {
       removeEventListener('click', this.handleClickOutside.bind(context));
       (
@@ -202,6 +207,67 @@ export class ScandashDropdown {
   }
 
   /**
+   * When expanded, focuses either the selected option or the first option.
+   */
+  private focusMostAppropriateOption() {
+    const selectedOption = this.ref.shadowRoot.querySelector(
+      SELECT.SELECTED_OPTION,
+    );
+    const firstEnabledOption = this.ref.shadowRoot.querySelector(
+      SELECT.ENABLED_OPTIONS,
+    );
+
+    ((selectedOption || firstEnabledOption) as HTMLElement)?.focus();
+  }
+
+  /**
+   * When the user expands the dropdown, we ensure the max-height of the
+   * dropdown prefers to be constrained to the available viewport space,
+   * provided it does not become too short.
+   *
+   * The dropdown will, as a result be vertically scrollable if the max-height
+   * is constrained this way.
+   */
+  private determineListHeight() {
+    if (!this.ref) return;
+
+    const root = this.ref.shadowRoot;
+
+    const combo = root.querySelector(SELECT.COMBOBOX) as HTMLElement;
+    const list = root.querySelector(SELECT.LIST) as HTMLElement;
+
+    if (!combo || !list) return;
+
+    // We get the bounding rect of the combo box and get its current
+    // bottom coordinate on the viewport. Then we proceed to subtract
+    // the bottom coordinate from the viewport height to get the
+    // available space below the combo box.
+
+    // We also subtract 16px from the available space to for UX purposes,
+    // to ensure the dropdown not touch the bottom of the viewport.
+
+    // We use visualViewport on the window object to get the viewport height
+    // as it is more accurate than the window.innerHeight property on iOS.
+
+    const comboRect = combo.getBoundingClientRect();
+
+    const comboBottom = comboRect.bottom;
+    const viewportHeight = visualViewport.height || innerHeight;
+
+    const availableListHeight = viewportHeight - comboBottom;
+    const bottomOffset = 16; // 1em
+
+    const maxHeight = availableListHeight - bottomOffset;
+
+    if (maxHeight < 200) {
+      list.style.maxHeight = '';
+      return;
+    }
+
+    list.style.maxHeight = `${maxHeight}px`;
+  }
+
+  /**
    * When an option is clicked, it is selected and the dropdown is collapsed.
    */
   private handleOptionClicked(option: Option) {
@@ -304,6 +370,10 @@ export class ScandashDropdown {
   }
 
   render() {
+    const iconChevron = getAssetPath(`./assets/chevron.svg`);
+
+    if (this.sanitizedOptions.length === 0) return null;
+
     return (
       <div>
         <button
@@ -312,12 +382,26 @@ export class ScandashDropdown {
           aria-expanded={this.isExpanded.toString()}
           aria-haspopup="listbox"
           aria-labelledby={`${this.id}-label`}
-          onClick={() => (this.isExpanded = !this.isExpanded)}>
+          onClick={() => (this.isExpanded = !this.isExpanded)}
+          style={{
+            height: `${this.itemSize}px`,
+            fontSize: `${this.fontSize}px`,
+          }}>
           {this.selectedOption?.label ? (
             <strong>{this.selectedOption?.label}</strong>
           ) : (
             <span>{this.placeholder || 'Select an option...'}</span>
           )}
+          <img
+            src={iconChevron}
+            alt=""
+            aria-hidden="true"
+            class={this.isExpanded ? 'rotate-180' : undefined}
+            style={{
+              height: `${this.itemSize}px`,
+              width: `${this.itemSize}px`,
+            }}
+          />
         </button>
         <div
           id={`${this.id}-listbox`}
@@ -351,7 +435,11 @@ export class ScandashDropdown {
                 ].includes(e.key) && e.preventDefault()
               }
               onKeyUp={e => this.handleKeyUp(e)}
-              tabIndex={this.isExpanded && !option.disabled ? 0 : -1}>
+              tabIndex={this.isExpanded && !option.disabled ? 0 : -1}
+              style={{
+                height: `${this.itemSize}px`,
+                fontSize: `${this.fontSize}px`,
+              }}>
               {this.selectedOption?.value === option.value ? (
                 <strong>{option.label}</strong>
               ) : (
