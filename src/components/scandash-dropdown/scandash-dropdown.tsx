@@ -110,12 +110,12 @@ export class ScandashDropdown {
    */
   @Watch('selectedOption')
   handleSelectedOptionChanged() {
-    this.onOptionChange.emit(this.selectedOption);
+    this.optionChange.emit(this.selectedOption);
   }
 
   // Events
 
-  @Event() onOptionChange: EventEmitter<Option>;
+  @Event() optionChange: EventEmitter<Option>;
 
   // Methods
 

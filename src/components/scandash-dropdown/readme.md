@@ -17,9 +17,9 @@
 
 ## Events
 
-| Event            | Description | Type                                                                                     |
-| ---------------- | ----------- | ---------------------------------------------------------------------------------------- |
-| `onOptionChange` |             | `CustomEvent<{ label: string; value: string; disabled?: boolean; selected?: boolean; }>` |
+| Event          | Description | Type                                                                                     |
+| -------------- | ----------- | ---------------------------------------------------------------------------------------- |
+| `optionChange` |             | `CustomEvent<{ label: string; value: string; disabled?: boolean; selected?: boolean; }>` |
 
 
 ## Methods

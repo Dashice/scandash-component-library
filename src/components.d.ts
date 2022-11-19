@@ -59,7 +59,7 @@ declare namespace LocalJSX {
           * @default 48
          */
         "itemSize"?: number;
-        "onOnOptionChange"?: (event: ScandashDropdownCustomEvent<Option>) => void;
+        "onOptionChange"?: (event: ScandashDropdownCustomEvent<Option>) => void;
         /**
           * A list of options to be displayed in the dropdown. May be passed as a JSON `string` or an array of `Option` objects.
          */
