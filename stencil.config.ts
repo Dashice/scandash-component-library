@@ -1,8 +1,15 @@
 import { Config } from '@stencil/core';
+import { reactOutputTarget as react } from '@stencil/react-output-target';
 
 export const config: Config = {
   namespace: 'scandash',
   outputTargets: [
+    react({
+      componentCorePackage: 'scandash',
+      proxiesFile:
+        '../scandash-react/src/components/stencil-generated/index.ts',
+      includeDefineCustomElements: true,
+    }),
     {
       type: 'dist',
       esmLoaderPath: '../loader',
