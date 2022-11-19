@@ -372,7 +372,7 @@ export class ScandashDropdown {
   render() {
     const iconChevron = getAssetPath(`./assets/chevron.svg`);
 
-    if (this.sanitizedOptions.length === 0) return null;
+    if (this.sanitizedOptions?.length === 0) return null;
 
     return (
       <div>

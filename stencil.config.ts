@@ -5,9 +5,9 @@ export const config: Config = {
   namespace: 'scandash',
   outputTargets: [
     react({
-      componentCorePackage: 'scandash',
+      componentCorePackage: 'scandash-component-library',
       proxiesFile:
-        '../scandash-react/src/components/stencil-generated/index.ts',
+        '../scandash-component-library-react/src/components/stencil-generated/index.ts',
       includeDefineCustomElements: true,
     }),
     {
