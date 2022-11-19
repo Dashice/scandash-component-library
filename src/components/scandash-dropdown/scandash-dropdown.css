@@ -24,6 +24,8 @@
 :host {
   --combo-bg-color: rgb(255, 255, 255);
   --combo-border-color: rgb(56, 65, 79);
+  --combo-border-color-empty: rgb(224, 226, 235);
+  --combo-border-color-empty-hover: rgb(134, 143, 162);
   --combo-placehoder-color: rgb(85, 101, 122);
 
   --list-hover-color: rgb(237, 239, 243);
@@ -83,9 +85,17 @@ div {
 
   background-color: var(--combo-bg-color);
 
+  border-bottom: 1px solid var(--combo-border-color);
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border-bottom: 1px solid var(--combo-border-color);
+}
+
+[role='combobox'].empty {
+  border-bottom: 1px solid var(--combo-border-color-empty);
+}
+
+[role='combobox'].empty:hover {
+  border-bottom: 1px solid var(--combo-border-color-empty-hover);
 }
 
 /* Instigator Placeholder */

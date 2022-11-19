@@ -382,6 +382,7 @@ export class ScandashDropdown {
           aria-expanded={this.isExpanded.toString()}
           aria-haspopup="listbox"
           aria-labelledby={`${this.id}-label`}
+          class={this.selectedOption ? undefined : 'empty'}
           onClick={() => (this.isExpanded = !this.isExpanded)}
           style={{
             height: `${this.itemSize}px`,
@@ -405,13 +406,13 @@ export class ScandashDropdown {
         </button>
         <div
           id={`${this.id}-listbox`}
-          class={this.isExpanded ? '' : 'visually-hidden no-events'}
+          class={this.isExpanded ? undefined : 'visually-hidden no-events'}
           role="listbox"
           aria-labelledby={`${this.id}-label`}>
           {this.sanitizedOptions?.map((option, index) => (
             <button
               key={index}
-              class={option.disabled ? 'no-events' : ''}
+              class={option.disabled ? 'no-events' : undefined}
               role="option"
               aria-disabled={option.disabled?.toString()}
               aria-posinset={index + 1}
