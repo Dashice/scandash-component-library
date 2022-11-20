@@ -106,6 +106,7 @@ div {
 /* Instigator Icon */
 [role='combobox'] > img {
   transform: scale(0.25);
+  object-fit: contain;
 }
 
 [role='combobox'] > img.rotate-180 {
