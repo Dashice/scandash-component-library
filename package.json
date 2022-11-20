@@ -1,6 +1,6 @@
 {
   "name": "scandash-component-library",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "description": "A native web component library for the Scania Digital Design System created with StencilJS.",
   "keywords": [
