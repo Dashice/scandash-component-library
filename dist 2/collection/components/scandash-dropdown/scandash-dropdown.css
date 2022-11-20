@@ -1,0 +1,159 @@
+/* Utility classes */
+
+.visually-hidden {
+  position: absolute;
+
+  overflow: hidden;
+
+  height: 1px;
+  width: 1px;
+
+  padding: 0;
+
+  border: 0;
+
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(0px 0px 99.9% 99.9%);
+  -webkit-clip-path: inset(0px 0px 99.9% 99.9%);
+}
+
+.no-events {
+  pointer-events: none;
+}
+
+:host {
+  --combo-bg-color: rgb(255, 255, 255);
+  --combo-border-color: rgb(56, 65, 79);
+  --combo-border-color-empty: rgb(224, 226, 235);
+  --combo-border-color-empty-hover: rgb(134, 143, 162);
+  --combo-placehoder-color: rgb(85, 101, 122);
+
+  --list-hover-color: rgb(237, 239, 243);
+  --list-focus-color: rgb(240, 240, 240);
+  --list-active-color: rgb(219, 223, 230);
+  --list-border-color: rgb(219, 223, 230);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Low-specificity reset for button element. */
+button {
+  width: 100%;
+
+  text-align: start;
+
+  background: none;
+  border: none;
+
+  appearance: none;
+}
+
+/* Low-specificity reset for strong and span elements. */
+span,
+strong {
+  display: -webkit-box;
+
+  overflow: hidden;
+
+  width: 100%;
+
+  padding: 0 1em;
+
+  font-weight: normal;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Host */
+div {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Instigator Wrapper */
+[role='combobox'] {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+
+  background-color: var(--combo-bg-color);
+
+  border-bottom: 1px solid var(--combo-border-color);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+[role='combobox'].empty {
+  border-bottom: 1px solid var(--combo-border-color-empty);
+}
+
+[role='combobox'].empty:hover {
+  border-bottom: 1px solid var(--combo-border-color-empty-hover);
+}
+
+/* Instigator Placeholder */
+[role='combobox'] > span {
+  color: var(--combo-placehoder-color);
+}
+
+/* Instigator Icon */
+[role='combobox'] > img {
+  transform: scale(0.25);
+}
+
+[role='combobox'] > img.rotate-180 {
+  /*
+    We use scaleY instead of rotate, as it also mirrors the transformation.
+    Good for non-1:1 bounding rects.
+  */
+  transform: scale(-1) scale(0.25);
+}
+
+/* Options list */
+[role='listbox'] {
+  display: block;
+
+  position: absolute;
+
+  overflow-y: auto;
+
+  width: 100%;
+  top: calc(100% - 1px);
+  left: 0;
+
+  background-color: white;
+  border: 1px solid var(--list-border-color);
+}
+
+/* Option */
+[role='option'] {
+  cursor: pointer;
+  outline: none;
+}
+
+/* Hovered option */
+[role='option']:not([aria-selected='true']):hover {
+  background-color: var(--list-hover-color);
+}
+
+/* Focused option */
+[role='option']:not([aria-selected='true']):focus {
+  background-color: var(--list-focus-color);
+}
+
+/* Disabled option */
+[aria-disabled='true'] {
+  opacity: 0.5;
+}
+
+/* Selected Option */
+[aria-selected='true'] {
+  background-color: var(--list-active-color);
+}
